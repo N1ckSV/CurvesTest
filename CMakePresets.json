@@ -1,0 +1,327 @@
+{
+    "version": 3,
+    "configurePresets": [
+        
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "11",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+            }
+        },
+
+        {
+            "name": "shared",
+            "hidden": true,
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+
+        {
+            "name": "gcc",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_FLAGS_INIT":
+                    "-pedantic -Wall -Wextra -Wattributes -Wpedantic -Wconversion -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo -Wstrict-null-sentinel -Wswitch-default -Wundef -Werror -Wno-unused",
+                "CMAKE_CXX_FLAGS_DEBUG_INIT": "-g -O0",
+                "CMAKE_CXX_FLAGS_RELEASE_INIT": "-O3"
+            }
+        },
+
+        {
+            "name": "msvc",
+            "hidden": true,
+            "generator": "Visual Studio 16 2019",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_CXX_FLAGS_INIT":
+                    "/W4 /WX /permissive- /EHa /utf-8 /wd4125 /wd4245 /wd4146 /wd4530 /wd4244 /wd4251 /wd4267 /sdl /FC",
+                "CMAKE_CXX_FLAGS_DEBUG_INIT":
+                    "/Od /DEBUG /RTC1 /Zi /Gs",
+                "CMAKE_CXX_FLAGS_RELEASE_INIT":
+                    "/O2 /Oi /Ot /GL /Gy /DEBUG:NONE /INCREMENTAL:NO /wd4189"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            }
+        },
+
+        {
+            "name": "debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "release",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+
+        {
+            "name": "windows",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+
+        {
+            "name": "linux",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        
+        {
+            "name": "windows-debug-mingw",
+            "displayName": "Debug MinGW Static",
+            "description": "Static Debug build using MinGW gen",
+            "inherits" : ["base", "gcc", "windows", "debug"],
+            "generator": "MinGW Makefiles",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "mingw32-make.exe"
+            }
+        },
+
+        {
+            "name": "windows-release-mingw",
+            "displayName": "Release MinGW Static",
+            "description": "Static Release build using MinGW gen",
+            "inherits" : ["base", "gcc", "windows", "release"],
+            "generator": "MinGW Makefiles",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "mingw32-make.exe"
+            }
+        },
+
+        {
+            "name": "windows-debug-mingw-shared",
+            "displayName": "Debug MinGW Shared",
+            "description": "Shared Debug build using MinGW gen",
+            "inherits" : ["base", "gcc", "windows", "shared" ,"debug"],
+            "generator": "MinGW Makefiles",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "mingw32-make.exe"
+            }
+        },
+
+        {
+            "name": "windows-release-mingw-shared",
+            "displayName": "Release MinGW Shared",
+            "description": "Shared Release build using MinGW gen",
+            "inherits" : ["base", "gcc", "windows", "shared" , "release"],
+            "generator": "MinGW Makefiles",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "mingw32-make.exe"
+            }
+        },
+
+        
+        {
+            "name": "windows-msvc",
+            "displayName": "Static MSVC",
+            "description": "Static Windows build using MSVC",
+            "inherits" : ["base", "msvc", "windows"]
+        },
+
+        {
+            "name": "windows-msvc-shared",
+            "displayName": "Shared MSVC",
+            "description": "Shared Windows build using MSVC",
+            "inherits" : ["base", "msvc", "shared" , "windows"]
+        },
+
+        {
+            "name": "linux-debug-ninja",
+            "displayName": "Debug Ninja",
+            "description": "Debug build using Ninja gen",
+            "inherits" : ["base", "gcc", "linux", "debug"],
+            "generator": "Ninja"
+        },
+
+        {
+            "name": "linux-release-ninja",
+            "displayName": "Release Ninja",
+            "description": "Release build using Ninja gen",
+            "inherits" : ["base", "gcc","linux", "release"],
+            "generator": "Ninja"
+        },
+
+        {
+            "name": "linux-debug-ninja-shared",
+            "displayName": "Debug Ninja Shared",
+            "description": "Shared Debug build using Ninja gen",
+            "inherits" : ["base", "gcc", "linux","shared" , "debug"],
+            "generator": "Ninja"
+        },
+
+        {
+            "name": "linux-release-ninja-shared",
+            "displayName": "Release Ninja Shared",
+            "description": "Shared Release build using Ninja gen",
+            "inherits" : ["base", "gcc","linux","shared" , "release"],
+            "generator": "Ninja"
+        }
+
+
+
+    ],
+    "buildPresets": [
+
+
+        
+        {
+            "name": "windows-debug-mingw",
+            "displayName": "Enabled",
+            "configurePreset": "windows-debug-mingw",
+            "configuration": "Debug",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+        {
+            "name": "windows-release-mingw",
+            "displayName": "Enabled",
+            "configurePreset": "windows-release-mingw",
+            "configuration": "Release",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+
+        {
+            "name": "windows-debug-mingw-shared",
+            "displayName": "Enabled",
+            "configurePreset": "windows-debug-mingw-shared",
+            "configuration": "Debug",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+        {
+            "name": "windows-release-mingw-shared",
+            "displayName": "Enabled",
+            "configurePreset": "windows-release-mingw-shared",
+            "configuration": "Release",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+
+
+        
+        
+        {
+            "name": "windows-debug-msvc",
+            "displayName": "Debug",
+            "configurePreset": "windows-msvc",
+            "configuration": "Debug",
+            "targets":[
+                "all_build",
+                "install"
+            ]
+        },
+        {
+            "name": "windows-release-msvc",
+            "displayName": "Release",
+            "configurePreset": "windows-msvc",
+            "configuration": "Release",
+            "targets":[
+                "all_build",
+                "install"
+            ]
+        },
+
+        
+        {
+            "name": "windows-debug-msvc-shared",
+            "displayName": "Debug",
+            "configurePreset": "windows-msvc-shared",
+            "configuration": "Debug",
+            "targets":[
+                "all_build",
+                "install"
+            ]
+        },
+        {
+            "name": "windows-release-msvc-shared",
+            "displayName": "Release",
+            "configurePreset": "windows-msvc-shared",
+            "configuration": "Release",
+            "targets":[
+                "all_build",
+                "install"
+            ]
+        },
+
+        
+        {
+            "name": "linux-debug-ninja",
+            "displayName": "Enabled",
+            "configurePreset": "linux-debug-ninja",
+            "configuration": "Debug",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+        {
+            "name": "linux-release-ninja",
+            "displayName": "Enabled",
+            "configurePreset": "linux-release-ninja",
+            "configuration": "Release",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+
+        {
+            "name": "linux-debug-ninja-shared",
+            "displayName": "Enabled",
+            "configurePreset": "linux-debug-ninja-shared",
+            "configuration": "Debug",
+            "targets":[
+              "all",
+              "install"
+            ]
+        },
+        {
+            "name": "linux-release-ninja-shared",
+            "displayName": "Enabled",
+            "configurePreset": "linux-release-ninja-shared",
+            "configuration": "Release",
+            "targets":[
+              "all",
+              "install"
+            ]
+        }
+        
+    
+
+
+
+
+    ]
+}
