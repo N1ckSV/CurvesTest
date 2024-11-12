@@ -9,10 +9,10 @@
 #include <chrono>
 #include <random>
 #include <iomanip>
-#include <time.h>
 #include <algorithm>
-#include <omp.h>
 #include <type_traits>
+
+#include <omp.h>
 
 #include "Curves/Circle.h"
 #include "Curves/Ellipse.h"
@@ -20,7 +20,6 @@
 
 #define RANDOM (static_cast<double>(rand()) / RAND_MAX)
 
-#define MAX_T 1000
 #define MAX_RADIUS 1000
 #define MIN_RADIUS 1
 #define MAX_STEP 1000
@@ -28,7 +27,6 @@
 
 #define CURVES_COUNT_DEFAULT 100
 
-#define RANDOM_T (RANDOM * MAX_T)
 #define RANDOM_RADIUS (RANDOM * (MAX_RADIUS - MIN_RADIUS) + MIN_RADIUS)
 #define RANDOM_STEP (RANDOM * MAX_STEP)
 
@@ -40,21 +38,21 @@ using CirclesVec = std::vector<SharedCircle>;
 
 void FillWithRandomCurves(CurvesVec& vec, size_t count)
 {
-    srand(static_cast<unsigned int>(time(0)));
+    srand(static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     vec.resize(count);
-
+    
     for(auto& curv : vec)
     {
         switch(rand() % 3)
         {
         case 0:
-            curv = SharedCurv(new Circle(RANDOM_RADIUS));
+            curv = std::make_shared<Circle>(RANDOM_RADIUS);
             break;
         case 1:
-            curv = SharedCurv(new Ellipse(RANDOM_RADIUS, RANDOM_RADIUS));
+            curv = std::make_shared<Ellipse>(RANDOM_RADIUS, RANDOM_RADIUS);
             break;
         case 2:
-            curv = SharedCurv(new Helix(RANDOM_RADIUS, RANDOM_STEP));
+            curv = std::make_shared<Helix>(RANDOM_RADIUS, RANDOM_STEP);
             break;
         default:
             CURVES_ASSERT(false, "default case must be unreachable here");
@@ -95,7 +93,7 @@ void Print(const std::vector<std::shared_ptr<T>>& vec, double t)
 //
 // check with dynamic_cast can also pass 
 // Circle's derived classes
-bool IsCircle(const AbstractCurve& curv)
+inline bool IsCircle(const AbstractCurve& curv)
 {
     return (typeid(curv) == typeid(Circle));
     // or
@@ -103,7 +101,7 @@ bool IsCircle(const AbstractCurve& curv)
     // or
     // return (curv.GetName() == "Circle");
     // or
-    // return dynamic_cast<const Circle&>(curv);
+    //return dynamic_cast<const Circle*>(&curv);
 }
 
 void FillterCircles(const CurvesVec& in, CirclesVec& out)
