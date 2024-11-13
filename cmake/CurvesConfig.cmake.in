@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(OpenMP)
+
+include(${CMAKE_CURRENT_LIST_DIR}/Curves.cmake)
+
+check_required_components(Curves)
+
+get_target_property(Curves_INCLUDE_DIRS Curves INTERFACE_INCLUDE_DIRECTORIES)
+
+set(Curves_FOUND 1)

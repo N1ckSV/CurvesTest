@@ -9,6 +9,7 @@ set(Curves_INCLUDE_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 
 
@@ -52,7 +53,12 @@ else()
     target_compile_definitions(Curves PUBLIC CURVES_STATIC_LINK)
 endif()
 
-target_include_directories(Curves PUBLIC ${Curves_INCLUDE_DIR})
+target_include_directories(Curves 
+    PUBLIC
+        "$<BUILD_INTERFACE:${Curves_INCLUDE_DIR}>"
+    INTERFACE
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
 
 if(CURVES_USE_ASSERTIONS)
     target_compile_definitions(Curves PUBLIC CURVES_USE_ASSERTIONS)
@@ -67,10 +73,35 @@ add_executable(CurvesTest src/Main.cpp)
 
 target_link_libraries(CurvesTest Curves OpenMP::OpenMP_CXX)
 
+include(GNUInstallDirs)
+
+
 
 install(
 	TARGETS Curves CurvesTest
+	EXPORT Curves
 	LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
 	RUNTIME DESTINATION  ${CMAKE_INSTALL_BINDIR}
     ARCHIVE DESTINATION  ${CMAKE_INSTALL_LIBDIR}
 )
+install(
+    EXPORT Curves
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Curves
+)
+
+install(
+    DIRECTORY   
+        ${Curves_INCLUDE_DIR}/
+    DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/CurvesConfig.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/CurvesConfig.cmake
+	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Curves
+	)
+    
+install(FILES 
+	${CMAKE_CURRENT_BINARY_DIR}/CurvesConfig.cmake
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Curves
+	)
